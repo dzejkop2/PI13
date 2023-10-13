@@ -2,10 +2,10 @@ import datetime
 
 
 class Osoba:
-    def __init__(self, meno_param, priezvisko_param, rok_param):
-        self.meno = meno_param
-        self.priezvisko = priezvisko_param
-        self.rok = rok_param
+    def __init__(self, meno, priezvisko, rok):
+        self.meno = meno
+        self.priezvisko = priezvisko
+        self.rok = rok
         self.vek = datetime.date.today().year - self.rok
 
     def pozdrav(self):
@@ -15,10 +15,20 @@ class Osoba:
         print(self.vek)
 
 
-kupko = Osoba("Jakub", "Geleta", 2006)
-jano = Osoba("Janko", "Hruška", 2000)
+class Ucitel(Osoba):
+    def __init__(self, meno, priezvisko, rok, titul, predmet):
+        Osoba.__init__(self,meno,priezvisko,rok)
+        self.titul = titul
+        self.predmet = predmet
+    def pozdrav(self):
+        print(f"Dobrý deň, som učiteľ {self.titul} {self.meno} {self.priezvisko} a mám {self.vek} rokov, učím predmet {self.predmet}")
 
-kupko.pozdrav()
-kupko.vypis_vek()
+
+jozo = Ucitel("Jozef","Hruška",1995, "Ing.", "Programovanie")
+jano = Osoba("Ján","Jablko",2004)
+
+
+jozo.pozdrav()
+jozo.vypis_vek()
 jano.pozdrav()
 jano.vypis_vek()
