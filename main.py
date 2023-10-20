@@ -22,9 +22,9 @@ class Ucitel(Osoba):
         self.titul = titul
         self.predmet = predmet
         self.trieda = trieda
-    def pozdrav(self):
-        print(f"Dobrý deň, som učiteľ {self.titul} {self.meno} {self.priezvisko} a mám {self.vek} rokov, učím predmet {self.predmet} a som tiredny triedy {self.trieda}")
 
+    def pozdrav(self):
+        return f"Dobrý deň, som učiteľ {self.titul} {self.meno} {self.priezvisko} a mám {self.vek} rokov, učím predmet {self.predmet} a som tiredny triede {self.trieda}"
 
 
 class Student(Osoba):
@@ -33,13 +33,42 @@ class Student(Osoba):
         self.trieda = trieda
 
     def pozdrav(self):
-        print(f"Ahoj, volam sa {self.meno} {self.priezvisko} a mám {self.vek} rokov a som žiakom triedy {self.trieda}")
+        return f"Ahoj, volam sa {self.meno} {self.priezvisko} a mám {self.vek} rokov a som žiakom triedy {self.trieda}"
+
+
 
 
 POCET_STUDENTOV = 10
 POCET_UCITELOV = 5
+vyber_ucitel = 0
+vyber_ziak = 0
+studenti_triedy = list()
 
 studenti = list()
+ucitelia = list()
+
+
+def uc_vyber():
+    while 1:
+        vyber_ucitel = input("Vyber id ucitela: ")
+        try:
+            int(vyber_ucitel)
+        except ValueError:
+            print("Treba zadať číslo")
+            continue
+
+        break
+
+def zi_vyber():
+    while 1:
+        vyber_ziak = input("Vyber id ziaka: ")
+        try:
+            int(vyber_ziak)
+        except ValueError:
+            print("Treba zadať číslo")
+            continue
+
+        break
 
 for i in range(POCET_STUDENTOV):
     with open("mena.txt", "r", encoding="utf-8") as t:
@@ -68,11 +97,7 @@ for i in range(POCET_STUDENTOV):
 
     studenti.append(Student(meno,priezvisko,rok,trieda))
 
-print("Študenti: \n")
-for i in range(POCET_STUDENTOV):
-    studenti[i].pozdrav()
 
-ucitelia = list()
 for i in range(POCET_UCITELOV):
     with open("mena.txt", "r", encoding="utf-8") as t:
         mena = tuple(t)
@@ -93,6 +118,44 @@ for i in range(POCET_UCITELOV):
 
     ucitelia.append(Ucitel(meno, priezvisko, rok, titul, predmet, trieda))
 
+
 print("Učitelia: \n")
 for i in range(POCET_UCITELOV):
-    ucitelia[i].pozdrav()
+    print(f"{i + 1}. " + ucitelia[i].meno)
+
+
+while 1:
+    uc_vyber()
+    if(vyber_ucitel - 1 <= len(ucitelia)):
+        print(ucitelia[vyber_ucitel - 1].pozdrav())
+        for i in range(len(studenti)):
+            if studenti[i - 1].trieda == ucitelia[vyber_ucitel - 1].trieda:
+                studenti_triedy.append(studenti[i - 1])
+        break
+    else:
+        continue
+
+for i in range(len(studenti_triedy)):
+    print(f"{i + 1}. " + studenti_triedy[i].meno)
+
+while 1:
+    if studenti_triedy:
+        zi_vyber()
+        if (vyber_ziak - 1 <= len(studenti_triedy)):
+            print(studenti_triedy[vyber_ziak].pozdrav())
+            break
+        else:
+            continue
+    else:
+        print("V triede nikto neni :)")
+        break
+
+
+ucitelia_new = sorted(ucitelia, key=lambda ucitel: ucitel.priezvisko)
+ziaci_new = sorted(studenti, key=lambda student: student.priezvisko)
+
+for ucitel in ucitelia_new:
+    print(ucitel.meno + " " + ucitel.priezvisko)
+
+for student in ziaci_new:
+    print(student.meno + " " + student.priezvisko)
